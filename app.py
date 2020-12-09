@@ -46,7 +46,7 @@ def register():
     return render_template("register.html")
 
 
-    @app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         # check if username exists in db
@@ -79,12 +79,10 @@ def profile(username):
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
 
-        if session["user"]:
-            
-            return render_template("userprofile.html", username=username)
+    if session["user"]:
+        return render_template("userprofile.html", username=username)
 
-          return redirect(url_for("login"))
-
+    return redirect(url_for("login"))
 
 
 @app.route("/logout")
