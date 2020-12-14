@@ -1,5 +1,43 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 {% block content %}
 <h3>Animes</h3>
+
+  <div class="row">
+    <div class="col s12 m6">
+      <div class="card">
+        <div class="card-image">
+          <img src="images/sample-1.jpg">
+          <span class="card-title">Name of Anime</span>
+          <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+        </div>
+        <div class="card-content">
+          <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="reccomandations">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                        <h3>Where to watch these shows!</h3>
+                        <ul class="list-inline links">
+                            <li class="list-inline-item">
+                                <a target="_blank" href="https://www.crunchyroll.com/en-gb">
+                                <span class="sr-only">Crunchyroll</span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a target="_blank" href="https://www.funimation.com/">
+                                <span class="sr-only">Funimation</span>
+                                </a>
+                            </li>
+                        </ul> 
+            </div>
+                
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}

@@ -3,7 +3,6 @@ from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
 from flask_pymongo import PyMongo
-from bson.objectid import ObjectId
 if os.path.exists("env.py"):
     import env
 
@@ -16,16 +15,18 @@ app.secret_key = os.environ.get("SECRET_KEY")
 from werkzeug.security import generate_password_hash, check_password_hash
 mongo = PyMongo(app)
 
+
 @app.route("/")
-@app.route("/Anime_list ")
-def get_Anime_list():
-    Anime = mongo.db.tasks.find()
-    return render_template("AnimeList.html", Anime=Anime)
+@app.route("/Anime_List")
+def Anime_List():
+    anime = mongo.db.Anime.find()
+    return render_template("AnimeList.html", anime=anime)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # check if username already exists in db
+        # if username already exists in db
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
 
@@ -39,28 +40,27 @@ def register():
         }
         mongo.db.users.insert_one(register)
 
-        # put the new user into 'session' cookie
-        session["user"] = request.form.get("username").lower()
+        #  new user into 'session' cookie
+        session["User"] = request.form.get("username").lower()
         flash("Registration Successful!")
-        return redirect(url_for("profile",username=session["user"]))
+        return redirect(url_for("profile", username=session["User"]))
     return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # check if username exists in db
-        existing_user = mongo.db.users.find_one(
+        #  if username exists in db
+        existing_user = mongo.db.Users.find_one(
             {"username": request.form.get("username").lower()})
 
         if existing_user:
             # ensure hashed password matches user input
-            if check_password_hash(
-                existing_user["password"], request.form.get("password")):
-                    session["user"] = request.form.get("username").lower()
-                    flash("Welcome, {}".format(request.form.get("username")))
-                    return redirect(url_for(
-                        "profile",username=session["user"]))
+            if check_password_hash(existing_user["password"], request.form.get("password")):
+                session["User"] = request.form.get("username").lower()
+                flash("Welcome, {}".format(request.form.get("username")))
+                return redirect(url_for(
+                        "profile", username=session["User"]))
             else:
                 # invalid password match
                 flash("Incorrect Username and/or Password")
@@ -76,10 +76,10 @@ def login():
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
     # grab the session user's username from db
-    username = mongo.db.users.find_one(
-        {"username": session["user"]})["username"]
+    username = mongo.db.Users.find_one(
+        {"username": session["User"]})["username"]
 
-    if session["user"]:
+    if session["User"]:
         return render_template("userprofile.html", username=username)
 
     return redirect(url_for("login"))
@@ -89,10 +89,10 @@ def profile(username):
 def logout():
     # remove user from session cookie
     flash("You have been logged out")
-    session.pop("user")
+    session.pop("User")
     return redirect(url_for("login"))
 
-    if __name__ == "__main__":
-        app.run(host=os.environ.get("IP"),
-            port=int(os.environ.get("PORT")),
-            debug=True)
+if __name__ == "__main__":
+    app.run(host=os.environ.get("IP"),
+        port=int(os.environ.get("PORT")),
+         debug=True)
